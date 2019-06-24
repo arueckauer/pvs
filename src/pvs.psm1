@@ -59,7 +59,7 @@ function pvs {
     # @todo If log files are to be deleted: Stop Apache service, delete log files, start Apache service
     Write-Host "Restarting Apache..." -ForegroundColor DarkCyan
     Write-Host ""
-    C:\webserv\httpd-2.4.39-win64-VC15\Apache24\bin\httpd.exe -k restart
+    Restart-Service Apache2.4
 }
 
 Export-ModuleMember -Function pvs
