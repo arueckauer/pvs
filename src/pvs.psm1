@@ -33,9 +33,9 @@ function pvs {
     switch ($version) {
         "7.0" { $phpPath = "C:\webserv\php-7.0.33-Win32-VC14-x64" }
         "7.1" { $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64" }
-        "7.2" { $phpPath = "C:\webserv\php-7.2.24-Win32-VC15-x64" }
-        "7.3" { $phpPath = "C:\webserv\php-7.3.11-Win32-VC15-x64" }
-        "7.4" { $phpPath = "C:\webserv\php-7.4.0RC6-Win32-vc15-x64" }
+        "7.2" { $phpPath = "C:\webserv\php-7.2.25-Win32-VC15-x64" }
+        "7.3" { $phpPath = "C:\webserv\php-7.3.12-Win32-VC15-x64" }
+        "7.4" { $phpPath = "C:\webserv\php-7.4.0-Win32-vc15-x64" }
         Default { throw "Provided PHP version $version is not supported" }
     }
 
