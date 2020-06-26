@@ -13,7 +13,7 @@
     Author            = 'Andi Rückauer'
 
     # Copyright statement for this module
-    Copyright         = '(c) 2019 Andi Rückauer'
+    Copyright         = '(c) 2020 Andi Rückauer'
 
     # Description of the functionality provided by this module
     Description       = 'PHP version switcher for Windows'
@@ -41,7 +41,7 @@
             Tags         = @('php', 'version')
 
             # A URL to the license for this module.
-            LicenseUri   = 'https://github.com/arueckauer/pvs/blob/master/LICENSE.txt'
+            LicenseUri   = 'https://github.com/arueckauer/pvs/blob/master/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri   = 'https://github.com/arueckauer/pvs'
