@@ -18,17 +18,17 @@ Download the latest [release](https://github.com/arueckauer/pvs/releases) and
 extract it to a temporary directory. To use the latest version, clone the
 repository instead.
 
-Create a path for the module. If applicable replace `1.0.0` with the actual
+Create a path for the module. If applicable replace `1.1.0` with the actual
 downloaded version.
 
 ```powershell
-New-Item -Type Directory -Path $HOME\Documents\WindowsPowerShell\Modules\pvs\1.0.0
+New-Item -Type Directory -Path $HOME\Documents\WindowsPowerShell\Modules\pvs\1.1.0
 ```
 
 Copy `src\pvs.psd1` and `src\pvs.psm1` module to its new home.
 
 ```powershell
-Copy-Item C:\path\to\pvs\pvs.* -Destination $HOME\Documents\WindowsPowerShell\Modules\pvs\1.0.0\
+Copy-Item C:\path\to\pvs\pvs.* -Destination $HOME\Documents\WindowsPowerShell\Modules\pvs\1.1.0\
 ```
 
 ### Import module
@@ -57,7 +57,11 @@ For the "active" version a symlink is set to `C:\webserv`. This path is set in
 the PATH environment variable and the Apache configuration is referencing the
 symlink instead of the actual path.
 
-`httpd.conf`
+To support both PHP 7 and PHP 8 releases, two configuration files for Apache
+httpd are required. Dependeing on the used major PHP version either one is
+referenced by a symlink.
+
+`httpd-php7.conf`
 
 ```
 # Load PHP7 Module
@@ -67,23 +71,54 @@ LoadModule php7_module "C:/webserv/php/php7apache2_4.dll"
 PHPIniDir "C:/webserv/php"
 ```
 
+`httpd-php8.conf`
+
+```
+# Load PHP8 Module
+AddHandler application/x-httpd-php .php
+AddType application/x-httpd-php .php .html
+LoadModule php_module "c:/webserv/php/php8apache2_4.dll"
+PHPIniDir "c:/webserv/php"
+```
+
+> Note: As of PHP 8, the module no longer includes the major version number.
+> See https://bugs.php.net/bug.php?id=78681
+
 In `src\pvs.psm1` you can configure the available versions and their paths. For
 example:
 
 ```powershell
-switch ($version) {
-    "7.0" { $phpPath = "C:\webserv\php-7.0.33-Win32-VC14-x64" }
-    "7.1" { $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64" }
-    "7.2" { $phpPath = "C:\webserv\php-7.2.31-Win32-VC15-x64" }
-    "7.3" { $phpPath = "C:\webserv\php-7.3.19-Win32-VC15-x64" }
-    "7.4" { $phpPath = "C:\webserv\php-7.4.7-Win32-vc15-x64" }
-    Default { throw "Provided PHP version $version is not supported" }
-}
+    $apacheConfigPath = "C:\webserv\httpd-2.4.41-win64-VS16\Apache24\conf\"
+    $apacheConfigFile = $apacheConfigPath + "httpd.conf"
+    $apacheConfigTarget = $apacheConfigPath + "httpd-php7.conf"
+
+    switch ($version) {
+        "7.0" {
+            $phpPath = "C:\webserv\php-7.0.33-Win32-VC14-x64"
+        }
+        "7.1" {
+            $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64"
+        }
+        "7.2" {
+            $phpPath = "C:\webserv\php-7.2.32-Win32-VC15-x64"
+        }
+        "7.3" {
+            $phpPath = "C:\webserv\php-7.3.20-Win32-VC15-x64"
+        }
+        "7.4" {
+            $phpPath = "C:\webserv\php-7.4.8-Win32-vc15-x64"
+        }
+        "8.0" {
+            $phpPath = "C:\webserv\php-8.0.0alpha3-Win32-vs16-x64"
+            $apacheConfigTarget = $apacheConfigPath + "httpd-php8.conf"
+        }
+        Default { throw "Provided PHP version $version is not supported" }
+    }
 ```
 
-This configuration shows a setup of all the latest PHP 7 minor versions. It is
-possible to have multiple patch version of the same minor installed by
-providing the full version number, e.g. `7.4.6`.
+This configuration shows a setup of all the latest PHP 7 minor versions and the
+latest QA release of PHP 8. It is possible to have multiple patch version of
+the same minor installed by providing the full version number, e.g. `7.4.6`.
 
 ## Usage
 
@@ -91,7 +126,7 @@ Open an elevated PowerShell, invoke `pvs` and provide the version as parameter.
 
 ```powershell
 C:\source> pvs 7.4
-PHP Version Switcher 1.0.0 by Andi Rückauer
+PHP Version Switcher 1.1.0 by Andi Rückauer
 
 Switching to version: 7.4...
 
@@ -113,7 +148,7 @@ WARNUNG: Warten auf Beendigung des Diensts "Apache2.4 (Apache2.4)"...
 
 
 C:\source> php -v
-PHP 7.4.7 (cli) (built: Jun  9 2020 13:36:15) ( ZTS Visual C++ 2017 x64 )
+PHP 7.4.8 (cli) (built: Jun  9 2020 13:36:15) ( ZTS Visual C++ 2017 x64 )
 Copyright (c) The PHP Group
 Zend Engine v3.4.0, Copyright (c) Zend Technologies
     with Xdebug v2.9.0, Copyright (c) 2002-2019, by Derick Rethans
