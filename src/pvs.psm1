@@ -42,13 +42,13 @@ function pvs {
             $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64"
         }
         "7.2" {
-            $phpPath = "C:\webserv\php-7.2.31-Win32-VC15-x64"
+            $phpPath = "C:\webserv\php-7.2.32-Win32-VC15-x64"
         }
         "7.3" {
-            $phpPath = "C:\webserv\php-7.3.19-Win32-VC15-x64"
+            $phpPath = "C:\webserv\php-7.3.20-Win32-VC15-x64"
         }
         "7.4" {
-            $phpPath = "C:\webserv\php-7.4.7-Win32-vc15-x64"
+            $phpPath = "C:\webserv\php-7.4.8-Win32-vc15-x64"
         }
         "8.0" {
             $phpPath = "C:\webserv\php-8.0.0alpha3-Win32-vs16-x64"
@@ -57,7 +57,7 @@ function pvs {
         Default { throw "Provided PHP version $version is not supported" }
     }
 
-    Write-Host "PHP Version Switcher 1.0.0 by Andi Rückauer" -ForegroundColor Blue
+    Write-Host "PHP Version Switcher 1.1.0 by Andi Rückauer" -ForegroundColor Blue
     Write-Host ""
     Write-Host "Switching to version: $version..." -ForegroundColor DarkCyan
     Write-Host ""
