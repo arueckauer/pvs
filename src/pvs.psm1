@@ -30,12 +30,30 @@ function pvs {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)] [Alias("v")] [String]$version
     )
 
+    $apacheConfigPath = "C:\webserv\httpd-2.4.41-win64-VS16\Apache24\conf\"
+    $apacheConfigFile = $apacheConfigPath + "httpd.conf"
+    $apacheConfigTarget = $apacheConfigPath + "httpd-php7.conf"
+
     switch ($version) {
-        "7.0" { $phpPath = "C:\webserv\php-7.0.33-Win32-VC14-x64" }
-        "7.1" { $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64" }
-        "7.2" { $phpPath = "C:\webserv\php-7.2.31-Win32-VC15-x64" }
-        "7.3" { $phpPath = "C:\webserv\php-7.3.19-Win32-VC15-x64" }
-        "7.4" { $phpPath = "C:\webserv\php-7.4.7-Win32-vc15-x64" }
+        "7.0" {
+            $phpPath = "C:\webserv\php-7.0.33-Win32-VC14-x64"
+        }
+        "7.1" {
+            $phpPath = "C:\webserv\php-7.1.33-Win32-VC14-x64"
+        }
+        "7.2" {
+            $phpPath = "C:\webserv\php-7.2.31-Win32-VC15-x64"
+        }
+        "7.3" {
+            $phpPath = "C:\webserv\php-7.3.19-Win32-VC15-x64"
+        }
+        "7.4" {
+            $phpPath = "C:\webserv\php-7.4.7-Win32-vc15-x64"
+        }
+        "8.0" {
+            $phpPath = "C:\webserv\php-8.0.0alpha3-Win32-vs16-x64"
+            $apacheConfigTarget = $apacheConfigPath + "httpd-php8.conf"
+        }
         Default { throw "Provided PHP version $version is not supported" }
     }
 
@@ -54,6 +72,10 @@ function pvs {
     Write-Host "Creating SymbolicLink..." -ForegroundColor DarkCyan
     Write-Host ""
     New-Item -ItemType SymbolicLink -Path C:\webserv\ -Name php -Value $phpPath
+
+    # Update Apache Configuration in case of major PHP version switch
+    (Get-Item $apacheConfigFile).Delete()
+    New-Item -ItemType SymbolicLink -Path $apacheConfigFile -Value $apacheConfigTarget
 
     # Restart Apache
     # @todo If log files are to be deleted: Stop Apache service, delete log files, start Apache service
